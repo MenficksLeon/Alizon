@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ffe6e6;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #game-container {
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block; /* Se ajusta al contenido */
+  }
+  
+  h1 {
+    color: #d63384;
+  }
+  
+  /* Contenedor del tablero sin espacios */
+  #board-container {
+    display: grid;
+    gap: 0;
+    margin: 10px auto;
+  }
+  
+  /* Contenedor de piezas (área para arrastrar) */
+  #pieces-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px auto;
+  }
+  
+  /* Las celdas del tablero y las piezas se dimensionan dinámicamente en JS */
+  
+  /* Botones */
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #d63384;
+  }
+  
