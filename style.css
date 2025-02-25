@@ -19,14 +19,14 @@ body {
     color: #d63384;
   }
   
-  /* Contenedor del tablero sin espacios */
+  /* Tablero sin espacios laterales */
   #board-container {
     display: grid;
     gap: 0;
     margin: 10px auto;
   }
   
-  /* Contenedor de piezas (área para arrastrar) */
+  /* Contenedor de piezas para arrastrar */
   #pieces-container {
     display: flex;
     flex-wrap: wrap;
@@ -35,7 +35,18 @@ body {
     margin: 10px auto;
   }
   
-  /* Las celdas del tablero y las piezas se dimensionan dinámicamente en JS */
+  /* Estilo para las celdas (drop zones): fondo gris y borde punteado */
+  .cell {
+    background-color: #ddd;
+    border: 1px dashed #aaa;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo para las piezas del rompecabezas */
+  .puzzle-piece {
+    cursor: grab;
+    box-sizing: border-box;
+  }
   
   /* Botones */
   button {
