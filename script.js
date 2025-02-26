@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
       // 4.1) Mensaje con fuente More Sugar
       const messageDiv = document.createElement("div");
-      messageDiv.innerText = "INFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO XDDDDDDDDD";
+      messageDiv.innerText = "Mensaje ---------------------------------------";
       messageDiv.style.fontFamily = "'More Sugar', cursive, sans-serif";
       messageDiv.style.fontSize = "20px";
       messageDiv.style.color = "#d63384";
