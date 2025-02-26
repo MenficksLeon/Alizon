@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Definición de niveles: cada objeto contiene la imagen, la música y el tamaño de la cuadrícula.
+    // Niveles: cada objeto tiene imagen, música y gridSize (cantidad de filas/columnas).
     const levels = [
-      { image: "img1.png", music: "music1.mp3", gridSize: 2 },
-      { image: "img2.png", music: "music2.mp3", gridSize: 3 },
-      { image: "img3.png", music: "music3.mp3", gridSize: 4 },
-      { image: "img4.png", music: "music4.mp3", gridSize: 5 },
-      { image: "img5.png", music: "music5.mp3", gridSize: 6 }
+      { image: "img1.jpg", music: "music1.mp3", gridSize: 2 },
+      { image: "img2.jpg", music: "music2.mp3", gridSize: 3 },
+      { image: "img3.jpg", music: "music3.mp3", gridSize: 4 },
+      { image: "img4.jpg", music: "music4.mp3", gridSize: 5 },
+      { image: "img5.jpg", music: "music5.mp3", gridSize: 6 }
     ];
     
     let currentLevel = 0;
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextLevelButton = document.getElementById("next-level");
     const backgroundMusic = document.getElementById("background-music");
   
-    // Para activar la música en móviles (evita bloqueo de autoplay)
+    // Para activar la música en móviles (evitar restricción de autoplay)
     document.addEventListener('touchstart', function initMusic() {
       backgroundMusic.play().catch(err => console.log("Error al reproducir música:", err));
       document.removeEventListener('touchstart', initMusic);
@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadLevel() {
       const levelData = levels[currentLevel];
       const gridSize = levelData.gridSize;
-      // Tamaño de pieza: 80px en móviles, 100px en escritorio
       const pieceSize = window.innerWidth < 600 ? 80 : 100;
       
       // Actualizar la música del nivel
@@ -35,18 +34,18 @@ document.addEventListener("DOMContentLoaded", () => {
       boardContainer.innerHTML = "";
       piecesContainer.innerHTML = "";
       
-      // Configurar el tablero: definir columnas, filas y ancho exacto
+      // Configurar tablero: columnas, filas y ancho exacto
       boardContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${pieceSize}px)`;
       boardContainer.style.gridTemplateRows = `repeat(${gridSize}, ${pieceSize}px)`;
       boardContainer.style.width = `${gridSize * pieceSize}px`;
       
-      // Crear las celdas (drop zones) en el tablero
+      // Crear celdas (drop zones)
       for (let i = 0; i < gridSize * gridSize; i++) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
         cell.style.width = pieceSize + "px";
         cell.style.height = pieceSize + "px";
-        cell.dataset.correct = i; // Posición correcta para la pieza
+        cell.dataset.correct = i; // Índice correcto
         cell.addEventListener("dragover", dragOver);
         cell.addEventListener("drop", dropPiece);
         boardContainer.appendChild(cell);
@@ -59,15 +58,15 @@ document.addEventListener("DOMContentLoaded", () => {
         piece.classList.add("puzzle-piece");
         piece.style.width = pieceSize + "px";
         piece.style.height = pieceSize + "px";
-        piece.dataset.index = i; // Índice correcto de la pieza
+        piece.dataset.index = i; // Posición correcta
         piece.draggable = true;
         piece.addEventListener("dragstart", dragStart);
-        // Eventos touch para dispositivos móviles
+        // Eventos touch para móviles
         piece.addEventListener("touchstart", touchStart, {passive: false});
         piece.addEventListener("touchmove", touchMove, {passive: false});
         piece.addEventListener("touchend", touchEnd, {passive: false});
         
-        // Asignar la imagen del nivel actual y calcular la parte visible (background)
+        // Asignar la imagen y calcular la porción visible
         piece.style.backgroundImage = `url(assets/images/${levelData.image})`;
         const totalSize = gridSize * pieceSize;
         piece.style.backgroundSize = `${totalSize}px ${totalSize}px`;
@@ -78,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pieces.push(piece);
       }
       
-      // Mezclar las piezas aleatoriamente y agregarlas al contenedor de piezas
+      // Mezclar las piezas aleatoriamente y agregarlas al contenedor
       pieces.sort(() => Math.random() - 0.5);
       pieces.forEach(piece => piecesContainer.appendChild(piece));
     }
@@ -103,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     
-    // Variables para manejo de touch
+    // Variables para touch
     let touchOffsetX = 0, touchOffsetY = 0;
     
     function touchStart(e) {
@@ -124,18 +123,29 @@ document.addEventListener("DOMContentLoaded", () => {
       draggedPiece.style.top = (touch.clientY - touchOffsetY) + 'px';
     }
     
+    // Nueva implementación para touchEnd: calcular la celda en base a la posición relativa al tablero
     function touchEnd(e) {
       e.preventDefault();
       const touch = e.changedTouches[0];
-      let dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
-      // Buscar hacia arriba en el DOM hasta encontrar una celda
-      while (dropTarget && !dropTarget.classList.contains("cell")) {
-        dropTarget = dropTarget.parentElement;
-      }
-      if (dropTarget && dropTarget.children.length === 0) {
-        dropTarget.appendChild(draggedPiece);
+      const boardRect = boardContainer.getBoundingClientRect();
+      const pieceSize = window.innerWidth < 600 ? 80 : 100;
+      // Verificar si se soltó dentro del tablero
+      if (touch.clientX >= boardRect.left && touch.clientX <= boardRect.right &&
+          touch.clientY >= boardRect.top && touch.clientY <= boardRect.bottom) {
+        const relativeX = touch.clientX - boardRect.left;
+        const relativeY = touch.clientY - boardRect.top;
+        const col = Math.floor(relativeX / pieceSize);
+        const row = Math.floor(relativeY / pieceSize);
+        const gridSize = levels[currentLevel].gridSize;
+        const cellIndex = row * gridSize + col;
+        const cell = boardContainer.children[cellIndex];
+        if (cell && cell.children.length === 0) {
+          cell.appendChild(draggedPiece);
+        } else {
+          piecesContainer.appendChild(draggedPiece);
+        }
       } else {
-        // Si no se encontró una celda válida, regresar la pieza al contenedor de piezas
+        // Si se suelta fuera del tablero, regresar la pieza al contenedor
         piecesContainer.appendChild(draggedPiece);
       }
       // Restaurar estilos de la pieza
