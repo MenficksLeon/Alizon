@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 5 niveles: cada uno con su imagen, música y tamaño de cuadrícula
     const levels = [
-      { image: "img1.jpg", music: "music1.mp3", gridSize: 1 },
-      { image: "img2.jpg", music: "music2.mp3", gridSize: 2 },
-      { image: "img3.jpg", music: "music3.mp3", gridSize: 3 },
-      { image: "img4.jpg", music: "music4.mp3", gridSize: 4 },
-      { image: "img5.jpg", music: "music5.mp3", gridSize: 5 }
+      { image: "img1.jpg", music: "music1.mp3", gridSize: 2 },
+      { image: "img2.jpg", music: "music2.mp3", gridSize: 3 },
+      { image: "img3.jpg", music: "music3.mp3", gridSize: 4 },
+      { image: "img4.jpg", music: "music4.mp3", gridSize: 5 },
+      { image: "img5.jpg", music: "music5.mp3", gridSize: 6 }
     ];
   
     let currentLevel = 0;
